@@ -1,0 +1,81 @@
+# infrastructure/terraform/s3.tf
+
+# S3 Bucket for Build Artifacts
+resource "aws_s3_bucket" "artifacts" {
+  bucket = "${var.environment}-devops-artifacts-${data.aws_caller_identity.current.account_id}"
+
+  tags = {
+    Name        = "${var.environment}-artifacts"
+    Purpose     = "Build artifacts and deployment packages"
+    Environment = var.environment
+  }
+}
+
+# S3 Bucket Versioning
+resource "aws_s3_bucket_versioning" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+# S3 Bucket Encryption
+resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# S3 Bucket Public Access Block
+resource "aws_s3_bucket_public_access_block" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# S3 Bucket Lifecycle Policy
+resource "aws_s3_bucket_lifecycle_configuration" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+
+  rule {
+    id     = "delete-old-artifacts"
+    status = "Enabled"
+
+    expiration {
+      days = 90
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+  }
+
+  rule {
+    id     = "transition-to-ia"
+    status = "Enabled"
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = 60
+      storage_class = "GLACIER"
+    }
+  }
+}
+
+# S3 Bucket for Terraform State (to be created manually first)
+# This is referenced in main.tf backend configuration
+
+# Data source for current AWS account
+data "aws_caller_identity" "current" {}

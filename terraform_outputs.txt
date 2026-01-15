@@ -1,0 +1,81 @@
+# infrastructure/terraform/outputs.tf
+
+output "vpc_id" {
+  description = "VPC ID"
+  value       = aws_vpc.main.id
+}
+
+output "public_subnet_ids" {
+  description = "Public subnet IDs"
+  value       = aws_subnet.public[*].id
+}
+
+output "private_subnet_ids" {
+  description = "Private subnet IDs"
+  value       = aws_subnet.private[*].id
+}
+
+output "alb_dns_name" {
+  description = "DNS name of the Application Load Balancer"
+  value       = aws_lb.app.dns_name
+}
+
+output "alb_zone_id" {
+  description = "Zone ID of the Application Load Balancer"
+  value       = aws_lb.app.zone_id
+}
+
+output "alb_url" {
+  description = "URL of the Application Load Balancer"
+  value       = "http://${aws_lb.app.dns_name}"
+}
+
+output "asg_name" {
+  description = "Name of the Auto Scaling Group"
+  value       = aws_autoscaling_group.app.name
+}
+
+output "target_group_arn" {
+  description = "ARN of the Target Group"
+  value       = aws_lb_target_group.app.arn
+}
+
+output "s3_artifacts_bucket" {
+  description = "S3 bucket name for artifacts"
+  value       = aws_s3_bucket.artifacts.id
+}
+
+output "s3_artifacts_bucket_arn" {
+  description = "S3 bucket ARN for artifacts"
+  value       = aws_s3_bucket.artifacts.arn
+}
+
+output "ec2_role_arn" {
+  description = "ARN of the EC2 IAM role"
+  value       = aws_iam_role.ec2_role.arn
+}
+
+output "security_group_app_id" {
+  description = "Security group ID for application servers"
+  value       = aws_security_group.app.id
+}
+
+output "security_group_alb_id" {
+  description = "Security group ID for ALB"
+  value       = aws_security_group.alb.id
+}
+
+output "app_url" {
+  description = "Application URL"
+  value       = "http://${aws_lb.app.dns_name}"
+}
+
+output "health_check_url" {
+  description = "Health check URL"
+  value       = "http://${aws_lb.app.dns_name}/health"
+}
+
+output "metrics_url" {
+  description = "Metrics URL"
+  value       = "http://${aws_lb.app.dns_name}/metrics"
+}

@@ -1,0 +1,73 @@
+# infrastructure/terraform/variables.tf
+
+variable "aws_region" {
+  description = "AWS region for resources"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "environment" {
+  description = "Environment name (dev, staging, prod)"
+  type        = string
+  default     = "prod"
+}
+
+variable "owner" {
+  description = "Owner of the resources"
+  type        = string
+  default     = "devops-team"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDR blocks for public subnets"
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "private_subnet_cidrs" {
+  description = "CIDR blocks for private subnets"
+  type        = list(string)
+  default     = ["10.0.11.0/24", "10.0.12.0/24"]
+}
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "key_name" {
+  description = "SSH key pair name"
+  type        = string
+  default     = "devops-automation-key"
+}
+
+variable "app_port" {
+  description = "Application port"
+  type        = number
+  default     = 3000
+}
+
+variable "allowed_ssh_cidr" {
+  description = "CIDR blocks allowed to SSH"
+  type        = list(string)
+  default     = ["0.0.0.0/0"] # Restrict this in production
+}
+
+variable "docker_image" {
+  description = "Docker image to deploy"
+  type        = string
+  default     = "your-dockerhub-username/devops-automation-backend:latest"
+}
+
+variable "enable_monitoring" {
+  description = "Enable monitoring stack"
+  type        = bool
+  default     = true
+}
