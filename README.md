@@ -229,7 +229,7 @@ devops-automation-platform/
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/devops-automation-platform.git
+git clone https://github.com/AbhishekDutta7120/devops-automation-platform.git
 cd devops-automation-platform
 
 # Start local environment
